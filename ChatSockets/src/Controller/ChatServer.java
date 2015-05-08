@@ -1,6 +1,8 @@
 package Controller;
 
+import java.io.BufferedReader;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -18,7 +20,8 @@ public class ChatServer {
 	public void creatSocket(){
 		try {
 			//cria o servidor
-			serverSocket = new ServerSocket(1234);
+			serverSocket = new ServerSocket(7007);
+			System.out.println("Servidor rodando!");
 
 			while(true){
 				socket = serverSocket.accept();
@@ -35,7 +38,30 @@ public class ChatServer {
 
 	//thread para a escrida de dados
 	private void creatWriteThread() {
-
+		Thread writeThread = new Thread() {
+			public void run(){
+				
+				while(socket.isConnected()){
+					try {
+						BufferedReader inputReader = new BufferedReader(new InputStreamReader(System.in));
+						sleep(100);
+						
+						String typedMessage = inputReader.readLine();
+						
+						if(typedMessage != null && typedMessage.length() > 0){
+							synchronized (socket) {
+								output.write(typedMessage.getBytes("UTF-8"));
+								sleep(100);
+							}
+						}
+					} catch (Exception e) {
+						// TODO: handle exception
+					}
+				}
+			}
+		};
+		writeThread.setPriority(Thread.MAX_PRIORITY);
+		writeThread.start();
 	}
 
 	//thread para leitura das mensagens 
@@ -64,5 +90,12 @@ public class ChatServer {
 				}
 			}
 		};
+		readThread.setPriority(Thread.MAX_PRIORITY);
+		readThread.start();
+	}
+	
+	public static void main(String[] args) {
+		ChatServer chatServer = new ChatServer();
+		chatServer.creatSocket();
 	}
 }
