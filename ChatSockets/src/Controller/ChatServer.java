@@ -4,10 +4,14 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
 
 public class ChatServer {
+	//id unico para cada conexao
+//	private static int uniqID;
 	private ServerSocket serverSocket = null;
 	private Socket socket = null;
 	private InputStream input = null;
@@ -20,11 +24,17 @@ public class ChatServer {
 	public void creatSocket(){
 		try {
 			//cria o servidor
-			serverSocket = new ServerSocket(7007);
+			serverSocket = new ServerSocket(3339);
 			System.out.println("Servidor rodando!");
 
 			while(true){
+				//aceita a conexao
 				socket = serverSocket.accept();
+				//Pega o inetAdress do cliente conectado
+				InetAddress address = socket.getInetAddress();
+				//Pega o endereco IP do cliente
+				String clientIP = address.getHostAddress();
+				
 				input = socket.getInputStream();
 				output = socket.getOutputStream();
 				System.out.println("Conectado!");
@@ -80,7 +90,7 @@ public class ChatServer {
 							System.arraycopy(readBuffer, 0, arrayByte, 0, num);
 
 							String msgRecebida = new String(arrayByte, "UTF-8");
-							System.out.println("Mensagem Recebida: " +msgRecebida);
+							System.out.println("Mensagem Recebida de: "  +msgRecebida);
 						}else{
 							notify();
 						}
