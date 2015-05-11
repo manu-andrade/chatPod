@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 public class Usuario implements Serializable{
 	private String username;
-	private Mensagem msg;
+	private Mensagem msg;    //eh necessario? ou some
 	private String status;
 	
 	public Usuario(String username){

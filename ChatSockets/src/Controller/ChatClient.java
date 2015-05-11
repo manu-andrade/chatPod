@@ -9,7 +9,7 @@ import java.net.Socket;
 //192.168.16.1 manu
 //10.0.4.78  meu
 
-
+//Refazer
 public class ChatClient {
 	private Socket socket = null;
 	private InputStream input = null;
